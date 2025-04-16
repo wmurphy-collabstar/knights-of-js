@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Document</title>
+</head>
+<body>
+    <h2 id="title">Fight!</h2>
+    <div id="gameOverScreen">
+        <h2>GAME OVER!</h2>
+        <h3 id="winningPlayer"></h3>
+    </div>
+    <div id="playerTurn">
+        <h2><span id="playerName">Player 1</span>'s turn!</h2>
+    </div>
+    <div id="fightingSpace">
+        <div class="player" id='playerOne'>
+            <h2>Player 1</h2>
+            <div class="healthSection">
+                <span>Health: </span><span id="playerOneHealth">100</span>
+            </div>
+            <div class="playerSpace">
+                <img id="playerOneSprite" class="idle" src="./images/R_Idle.png" alt="">
+                <span>Image by <a
+                        href="https://www.freepik.com/free-vector/set-warrior-different-postures_1354461.htm#query=robot%20sprite&position=8&from_view=keyword&track=ais">
+                        Freepik</a></span>
+                <button id="playerOneAttack" class="inactive" onclick="attackPlayerOne()">Attack!</button>
+            </div>
+        </div>
+        <div class="player" id='playerTwo'>
+            <h2>Player 2</h2>
+            <div class="healthSection">
+                <span>Health: </span><span id="playerTwoHealth"> 100</span>
+            </div>
+            <div class="playerSpace">
+                <img id="playerTwoSprite" class="idle" src="./images/L_Idle.png" alt="">
+                <span>Image by <a
+                        href="https://www.freepik.com/free-vector/set-warrior-different-postures_1354461.htm#query=robot%20sprite&position=8&from_view=keyword&track=ais">
+                        Freepik</a></span>
+                <button id="playerTwoAttack" class="active" onclick="attackPlayerTwo()">Attack!</button>
+            </div>
+        </div>
+        <div><audio id="SFX_PlayerDamage" src="audio/SFX_PlayerDamage.wav"></audio></div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
