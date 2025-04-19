@@ -9,27 +9,58 @@ let gameState = {
 
 // function that considers which player's turn it is and then
 // changes the UI accordingly
-function changePlayer() {
+function changePlayer(randomDamage) {
     // if the current player is player 1 at the end of a move
     if (gameState.whoseTurn === 1) {
         let playerTwoHealth = document.getElementById("playerTwoHealth");
         // conversts the innerHTML from string to a number and stores it in a variable
         let playerTwoHealthNum = Number(playerTwoHealth.innerHTML);
-        // reduces by 10
-        playerTwoHealthNum -= 10;
+        // reduces by random number between 0 and 10
+        playerTwoHealthNum -= randomDamage;
         // resets the HTML to the new value
         playerTwoHealth.innerHTML = playerTwoHealthNum;
 
         // checks if the player has reached 0 health
         if (playerTwoHealthNum <= 0) {
             // ensures health does not dig into the negative
-            playerTwoHealth = 0;
+            playerTwoHealth.innerText = 0;
+            // adds yellow halo around winning sprite
+            let playerOneSprite = document.getElementById("playerOneSprite")
+            playerOneSprite.classList.add("winner");
             // ends the game
             gameOver();
         }
         else {
             // switch to the next player and change the UI's display / behavior
             gameState.whoseTurn = 2;
+
+            // grabs the 'playerName' element and changes the player's turn display
+            let playerName = document.getElementById("playerName");
+            playerName.innerHTML = `Player ${gameState.whoseTurn}`;
+        }
+
+    }else{
+        let playerOneHealth = document.getElementById("playerOneHealth");
+        // conversts the innerHTML from string to a number and stores it in a variable
+        let playerOneHealthNum = Number(playerOneHealth.innerHTML);
+        // reduces by random number between 0 and 10
+        playerOneHealthNum -= randomDamage;
+        // resets the HTML to the new value
+        playerOneHealth.innerHTML = playerOneHealthNum;
+
+        // checks if the player has reached 0 health
+        if (playerOneHealthNum <= 0) {
+            // ensures health does not dig into the negative
+            playerOneHealth.innerText = 0;
+            // adds yellow halo around winning sprite
+            let playerTwoSprite = document.getElementById("playerTwoSprite");
+            playerTwoSprite.classList.add("winner");
+            // ends the game
+            gameOver();
+        }
+        else {
+            // switch to the next player and change the UI's display / behavior
+            gameState.whoseTurn = 1;
 
             // grabs the 'playerName' element and changes the player's turn display
             let playerName = document.getElementById("playerName");
@@ -42,15 +73,43 @@ function changePlayer() {
 // and the winner is announced
 function gameOver() {
     let title = document.getElementById("title");
-    title.style = "display: none;";
+    // changed style declaration to specify display attribute
+    title.style.display =  "none";
     let playerTurnDisplay = document.getElementById("playerTurn");
-    playerTurnDisplay.style = "display: none;";
+    //changed style declaration to specify display attribute
+    playerTurnDisplay.style.display = "none";
 
     let winningPlayer = document.getElementById("winningPlayer");
     winningPlayer.innerHTML = `Player ${gameState.whoseTurn} wins!`
 
     let gameOverScreen = document.getElementById("gameOverScreen");
-    gameOverScreen.style = "display: flex; flex-direction: column;";
+    // broke up style declaration to specify display and flexDirection attributes
+    gameOverScreen.style.display = "flex";
+    gameOverScreen.style.flexDirection = "column";
+
+    // update gameState when game is over
+    gameState.gameOver = true;
+    // disable both attack buttons so user can't continue game
+    disablePlayButtons();
+    // play music when game ends at a 750 millisecond delay
+    let successFanfare = document.getElementById("success-fanfare");
+    setTimeout(() => successFanfare.play(), 750);
+}
+
+// disables both attack buttons and sets styling to that of the inactive class
+function disablePlayButtons(){
+    let playerOneAttackButton = document.getElementById("playerOneAttack");
+    let playerTwoAttackButton = document.getElementById("playerTwoAttack");
+
+    playerOneAttackButton.disabled = true;
+    playerTwoAttackButton.disabled = true;
+
+    playerOneAttackButton.classList.add("inactive");
+    playerTwoAttackButton.classList.add("inactive");
+
+    playerOneAttackButton.classList.remove("active");
+    playerTwoAttackButton.classList.remove("active");
+
 }
 
 // function that allows the player two attack button to reduce the player two's
@@ -60,20 +119,30 @@ function attackPlayerTwo() {
     // and player 1 attack button to active using DOM manipulation
     // this also DISABLES the button, meaning they are not interactable
     function changeButtonStatus() {
+        // selects player 2 attack button
         let playerTwoAttackButton = document.getElementById("playerTwoAttack");
-        playerTwoAttackButton.disabled = true;
-        playerTwoAttackButton.classList.add("inactive");
-        playerTwoAttackButton.classList.remove("active");
+        // enables player 2 attack button
+        playerTwoAttackButton.disabled = false;
+        // adds 'active' class to button
+        playerTwoAttackButton.classList.add("active");
+        // removes 'inactive' class for button
+        playerTwoAttackButton.classList.remove("inactive");
+        // focuses on the button for improved accessibility
+        playerTwoAttackButton.focus();
 
+        // selects player 1 attack button
         let playerOneAttackButton = document.getElementById("playerOneAttack");
-        playerOneAttackButton.disabled = false;
-        playerOneAttackButton.classList.add("active");
-        playerOneAttackButton.classList.remove("inactive");
+        // disables player 1 button
+        playerOneAttackButton.disabled = true;
+        // adds 'inactive' class to button
+        playerOneAttackButton.classList.add("inactive");
+        // removes 'inactive' class from button
+        playerOneAttackButton.classList.remove("active");
     }
 
     // commpartmentalized function that changes the player 1's sprite using the array
     // containing multiple images
-    function animatePlayer() {
+    function animatePlayer(randomDamage) {
         // an array containing the images using in player one's animation
         // the indices are later used to cycle / "animate" when the player attacks
         let playerOneFrames = [
@@ -82,26 +151,28 @@ function attackPlayerTwo() {
         ];
 
         let playerSprite = document.getElementById("playerOneSprite");
-        // function we will call in setTimeout, before the frames change back
-        // the idle stance
         // in other words, we set to the attack sprite, wait 3 seconds,
         // then set it back to the idle sprite
         playerSprite.src = playerOneFrames[1];
         
         // removes the 'idle' class from the player sprite
         playerSprite.classList.remove("idle");
-        // adds the 'attack' class to the player sprite
+        // adds the 'attack-right' class to the player sprite
         // ** CHECK THE CSS TO NOTE THE CHANGES MADE **
-        playerSprite.classList.add("attack");
+        playerSprite.classList.add("attack-right");
 
         // grabs the enemy sprite
         let enemySprite = document.getElementById("playerTwoSprite");
+        // grabs the damage sound
         let enemyDamage = document.getElementById("SFX_PlayerDamage");
         // removes the 'idle' class from the enemy sprite
         enemySprite.classList.remove("idle");
-        // adds the 'attack' class to the enemy sprite
-        // ** CHECK THE CSS TO NOTE THE CHANGES MADE **
-        enemySprite.classList.add("damage");
+        // adds the 'damage-left' class to the enemy sprite
+        enemySprite.classList.add("damage-left");
+        // changes volume of damage sound depending on amount of points deducted from player's health
+        enemyDamage.volume = randomDamage * .1;
+        // sets the time for the sound to play at 0
+        enemyDamage.currentTime = 0;
         // sound that plays when enemy takes damage
         enemyDamage.play();
 
@@ -109,14 +180,13 @@ function attackPlayerTwo() {
         // after 350 milliseconds
         // this function will execute this block of code
         function changePlayerOneSprite() {
-            enemySprite.classList.remove("damage");
+            enemySprite.classList.remove("damage-left");
             enemySprite.classList.add("idle");
 
             playerSprite.src = playerOneFrames[0];
-            playerSprite.classList.remove("attack");
+            playerSprite.classList.remove("attack-right");
             playerSprite.classList.add("idle");
         }
-
         setTimeout(changePlayerOneSprite, 350);
     }
 
@@ -124,14 +194,99 @@ function attackPlayerTwo() {
     // we do not include ALL of the above code within this condition
     // instead, we create higher-order functions to keep the code neat and readable
     if (gameState.whoseTurn === 1) {
-        animatePlayer();
+        // amount of damage player 1 will inflict on player 2
+        const randomDamage = Math.floor(Math.random()*11);
+        animatePlayer(randomDamage);
         changeButtonStatus();
-        changePlayer();
+        changePlayer(randomDamage);
     }
 }
 
 function attackPlayerOne() {
-    if (gameState.whoseTurn === 2) {
+    // compartmentalized function that will switch the player 2 attack button to inactive
+    // and player 1 attack button to active using DOM manipulation
+    // this also DISABLES the button, meaning they are not interactable
+    function changeButtonStatus() {
+        // selects player 2 attack button
+        let playerTwoAttackButton = document.getElementById("playerTwoAttack");
+        // disables player 2 attack button
+        playerTwoAttackButton.disabled = true;
+        // adds 'inactive' class to button
+        playerTwoAttackButton.classList.add("inactive");
+        // removes 'active' class from button
+        playerTwoAttackButton.classList.remove("active");
+
+        // selects player 1 attack button
+        let playerOneAttackButton = document.getElementById("playerOneAttack");
+        // enables player 1 attack button
+        playerOneAttackButton.disabled = false;
+        // adds 'active' class to button
+        playerOneAttackButton.classList.add("active");
+        // removes 'inactive' class to button
+        playerOneAttackButton.classList.remove("inactive");
+        // focuses on the button for improved accessibility
+        playerOneAttackButton.focus();
+    }
+
+    // commpartmentalized function that changes the player 2's sprite using the array
+    // containing multiple images
+    function animatePlayer() {
+        // an array containing the images using in player two's animation
+        // the indices are later used to cycle / "animate" when the player attacks
+        let playerTwoFrames = [
+            "./images/L_Idle.png",
+            "./images/L_Attack.png"
+        ];
+
+        let playerSprite = document.getElementById("playerTwoSprite");
+        // in other words, we set to the attack sprite, wait 3 seconds,
+        // then set it back to the idle sprite
+        playerSprite.src = playerTwoFrames[1];
+        
+        // removes the 'idle' class from the player sprite
+        playerSprite.classList.remove("idle");
+        // adds the 'attack-left' class to the player sprite
+        // ** CHECK THE CSS TO NOTE THE CHANGES MADE **
+        playerSprite.classList.add("attack-left");
+
+        // grabs the enemy sprite
+        let enemySprite = document.getElementById("playerOneSprite");
+        // grabs the damage sound
+        let enemyDamage = document.getElementById("SFX_PlayerDamage");
+        // removes the 'idle' class from the enemy sprite
+        enemySprite.classList.remove("idle");
+        // adds the 'damage-right' class to the enemy sprite
+        // ** CHECK THE CSS TO NOTE THE CHANGES MADE **
+        enemySprite.classList.add("damage-right");
+        // changes volume of damage sound depending on amount of points deducted from player's health
+        enemyDamage.volume = randomDamage * .1;
+        // sets the time for the sound to play at 0
+        enemyDamage.currentTime = 0;
+        // sound that plays when enemy takes damage
+        enemyDamage.play();
+
+        // the function we will call in the setTimeOut method below
+        // after 350 milliseconds
+        // this function will execute this block of code
+        function changePlayerTwoSprite() {
+            enemySprite.classList.remove("damage-right");
+            enemySprite.classList.add("idle");
+
+            playerSprite.src = playerTwoFrames[0];
+            playerSprite.classList.remove("attack-left");
+            playerSprite.classList.add("idle");
+        }
+        setTimeout(changePlayerTwoSprite, 350);
+    }
+    // amount of damage player 2 will inflict on player 1
+    const randomDamage = Math.floor(Math.random()*11);
+    animatePlayer(randomDamage);
+    changeButtonStatus();
+    changePlayer(randomDamage);
+
+    // Commented this starter code out as it was less helpful than the functions
+    // made for attackPlayerTwo function
+    /*if (gameState.whoseTurn === 2) {
         let playerOneHealth = document.getElementById("playerOneHealth");
         let playerOneHealthNum = Number(playerOneHealth.innerHTML);
         playerOneHealthNum -= 10;
@@ -143,5 +298,5 @@ function attackPlayerOne() {
         } else {
             changePlayer();
         }
-    }
+    }*/
 }
