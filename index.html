@@ -4,12 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
-    <title>Document</title>
+    <!-- Changed title from Document to Knights of Javascript -->
+    <title>Knights of Javascript</title>
 </head>
 <body>
     <h2 id="title">Fight!</h2>
     <div id="gameOverScreen">
-        <h2>GAME OVER!</h2>
+        <!-- Added id to Game Over title for styling purposes -->
+        <h2 id="gameOverTitle">GAME OVER!</h2>
         <h3 id="winningPlayer"></h3>
     </div>
     <div id="playerTurn">
@@ -26,7 +28,8 @@
                 <span>Image by <a
                         href="https://www.freepik.com/free-vector/set-warrior-different-postures_1354461.htm#query=robot%20sprite&position=8&from_view=keyword&track=ais">
                         Freepik</a></span>
-                <button id="playerOneAttack" class="inactive" onclick="attackPlayerOne()">Attack!</button>
+                <!-- Changed onclick function from attackPlayerOne() to attackPlayerTwo(), and changed class from inactive to active -->
+                <button id="playerOneAttack" class="active" onclick="attackPlayerTwo()" autofocus>Attack!</button> <!-- Added autofocus for accessibility -->
             </div>
         </div>
         <div class="player" id='playerTwo'>
@@ -39,11 +42,14 @@
                 <span>Image by <a
                         href="https://www.freepik.com/free-vector/set-warrior-different-postures_1354461.htm#query=robot%20sprite&position=8&from_view=keyword&track=ais">
                         Freepik</a></span>
-                <button id="playerTwoAttack" class="active" onclick="attackPlayerTwo()">Attack!</button>
+                <!-- Changed onclick function from attackPlayerTwo() to attackPlayerOne(), changed class from active to inactive, and disabled button on default -->
+                <button id="playerTwoAttack" class="inactive" onclick="attackPlayerOne()" disabled>Attack!</button>
             </div>
         </div>
         <div><audio id="SFX_PlayerDamage" src="audio/SFX_PlayerDamage.wav"></audio></div>
+        <!-- Added success fanfare for winner when game is over -->
+        <div><audio id="success-fanfare" src="audio/success-fanfare.wav"></audio></div>
     </div>
-    <script src="script.js"></script>
+    <script src="./script.js"></script>
 </body>
 </html>
