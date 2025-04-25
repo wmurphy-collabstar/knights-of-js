@@ -1,6 +1,9 @@
 # Knights Of Javascript: Battle of Coding Strength
 > An online game between two knights that involves working with event handlers, styling, audio elements, and two-player game logic. The project had an added element of most of the HTML, CSS and Javascript already being written, so the goal was to fix the bugs and add to the source code so that game works smoothly but also doesn't change much of the starter code.
 
+Live version:
+[Knights of Javscript](https://wmurphy-collabstar.github.io/knights-of-js/)
+
 ## Features
 - A duel between two knights featured in a forest with animation between `attack` and `idle` mode, audio for each strike, and updated health count for each player
 - Added styling for when a player wins and the overall UI to improve text contrast to background image, and accessible styling for keyboard users
