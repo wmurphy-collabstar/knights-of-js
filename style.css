@@ -9,6 +9,7 @@ body {
     background-position: center;
     /* Scaled background image for higher definition */
     background-size: cover;
+    min-height: 100vh;
 }
 
 /* Styled heading above player space for easier readability */
