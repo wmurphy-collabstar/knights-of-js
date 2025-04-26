@@ -9,7 +9,11 @@ body {
     background-position: center;
     /* Scaled background image for higher definition */
     background-size: cover;
+    /* Styling that removes repeating background and covers page*/
+    background-repeat: no-repeat;
     min-height: 100vh;
+    /*Background color in case background image doesn't cover page*/
+    background-color: #556B2F;
 }
 
 /* Styled heading above player space for easier readability */
